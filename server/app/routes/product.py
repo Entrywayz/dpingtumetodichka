@@ -10,7 +10,7 @@ router = APIRouter(tags=["products"])
 
 @router.get("/products", response_model=list[ProductResponse])
 def get_products(q: str | None = None, db: Session = Depends(get_db)):
-    return ProductRepository(db).get_all(q)
+    return ProductRepository(db).search(q)
 
 
 @router.post("/products", response_model=ProductResponse, status_code=201, dependencies=[Depends(require_role("employee", "admin"))])

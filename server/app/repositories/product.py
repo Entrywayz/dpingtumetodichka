@@ -6,13 +6,12 @@ from .base import BaseRepository
 class ProductRepository(BaseRepository):
     model = Product
 
-    def search(self, query: str) -> list[Product]:
-        pattern = f"%{query}%"
-        return (
-            self.db.query(Product)
-            .filter(or_(
+    def search(self, query: str | None = None) -> list[Product]:
+        q = self.db.query(Product)
+        if query:
+            pattern = f"%{query}%"
+            q = q.filter(or_(
                 Product.name.ilike(pattern),
                 Product.description.ilike(pattern),
             ))
-            .all()
-        )
+        return q.order_by(Product.id).all()

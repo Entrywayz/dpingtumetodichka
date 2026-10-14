@@ -7,7 +7,7 @@ from app.dependencies import require_role
 
 router = APIRouter(tags=["orders"])
 
-@router.get("/orders", response_model=list[OrderResponse])
+@router.get("/orders", response_model=list[OrderResponse], dependencies=[Depends(require_role("employee", "admin"))])
 def get_orders(db: Session = Depends(get_db)):
     return OrderRepository(db).get_all()
 
