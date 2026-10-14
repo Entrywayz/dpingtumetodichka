@@ -3,7 +3,7 @@ from jose import jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from ..config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_HOURS
+from ..config import Settings
 from ..models import User
 from ..repositories import UserRepository
 
@@ -22,9 +22,9 @@ def create_access_token(user: User) -> str:
     payload = {
         "sub": str(user.id),
         "role": user.role,
-        "exp": datetime.utcnow() + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS),
+        "exp": datetime.utcnow() + timedelta(hours=Settings.access_token_expire_hours),
     }
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(payload, Settings.secret_key, algorithm=Settings.algorithm)
 
 
 def login(db: Session, login_name: str, password: str) -> User | None:

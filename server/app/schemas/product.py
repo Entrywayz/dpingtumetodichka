@@ -23,3 +23,9 @@ class ProductUpdate(BaseModel):
 class ProductResponse(ProductBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
+
+class ProductShort(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    price: Decimal

@@ -9,7 +9,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     description = Column(Text)
-    in_stock = Column(Integer, nullable=False, default=0)  # 1 — в наличии, 0 — нет
+    in_stock = Column(Integer, nullable=False, default=0) 
     price = Column(Numeric(10, 2), nullable=False)
 
     orders = relationship("Order", back_populates="product")

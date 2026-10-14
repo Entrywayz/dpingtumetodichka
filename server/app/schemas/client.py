@@ -19,3 +19,9 @@ class ClientUpdate(BaseModel):
 class ClientResponse(ClientBase):
     model_config = ConfigDict(from_attributes=True)  
     id: int
+
+class ClientShort(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    full_name: str
+    phone: str | None = None
