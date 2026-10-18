@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: shop_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: shop_tv
+      MYSQL_USER: shop_user
+      MYSQL_PASSWORD: waxzsq1d
+      MYSQL_ROOT_PASSWORD: root_secret_password
+    ports:
+      - "3306:3306" 
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_secret_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: shop_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./server/static:/app/static
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        # Переменная вшивается в сборку для клиентского JS в браузере
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    container_name: shop_frontend
+    restart: unless-stopped
+    environment:
+      - INTERNAL_API_URL=http://backend:8000    
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: shop_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./server/static:/usr/share/nginx/html/static:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mysql_data:

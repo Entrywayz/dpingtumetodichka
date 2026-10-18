@@ -1,14 +1,25 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.services.auth import login, create_access_token
-from app.schemas.auth import LoginRequest, Token
 
-router = APIRouter(tags=["auth"])
+from ..schemas.auth import LoginRequest, Token, UserResponse
+from ..services.auth import authenticate_user, create_access_token, get_current_user
+from ..database import get_db
+from ..models import User
+
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login", response_model=Token)
-def auth_login(data: LoginRequest, db: Session = Depends(get_db)):
-    user = login(db, data.login, data.password)
+def login_route(req: LoginRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(db, req.login, req.password)
     if not user:
-        raise HTTPException(401, "Неверный логин или пароль")
-    return Token(access_token=create_access_token(user))
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Неверный логин или пароль"
+        )
+    
+    token = create_access_token(user, remember_me=req.remember_me)
+    return Token(access_token=token)
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
