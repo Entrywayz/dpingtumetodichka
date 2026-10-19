@@ -7,9 +7,9 @@ from app.routes import auth, client, order, employee, product
 
 app = FastAPI(
     title=settings.app_name,
-    debug=settings.debug,
-    docs_url='/api/docs',
-    redoc_url='/api/redoc'
+    docs_url="/docs" if settings.debug else None,
+    redoc_url="/redoc" if settings.debug else None,
+    openapi_url="/openapi.json" if settings.debug else None,
 )
 
 app.add_middleware(
