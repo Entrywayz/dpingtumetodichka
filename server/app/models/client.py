@@ -11,4 +11,8 @@ class Client(Base):
     address = Column(Text)
     phone = Column(String(11))
 
-    orders = relationship("Order", back_populates="client")
+    orders = relationship(
+        "Order",
+        back_populates="client",
+        cascade="all, delete-orphan",  
+    )

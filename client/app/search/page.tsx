@@ -1,56 +1,56 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import { Get } from "@/lib/server";
+import { useEffect, useState } from "react"
+import { Get } from "@/lib/server"
 
 interface ProductResponse {
-    id: number;
-    name: string;
-    price: number;
+    id: number
+    name: string
+    price: number
 }
 
 export default function SearchPage() {
-    const [query, setQuery] = useState("");
-    const [products, setProducts] = useState<ProductResponse[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [query, setQuery] = useState("")
+    const [products, setProducts] = useState<ProductResponse[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const trimmed = query.trim();
+        const trimmed = query.trim()
 
         if (!trimmed) {
-            setProducts([]);
-            setError(null);
-            setLoading(false);
-            return;
+            setProducts([])
+            setError(null)
+            setLoading(false)
+            return
         }
 
-        const controller = new AbortController();
-        setLoading(true);
-        setError(null);
+        const controller = new AbortController()
+        setLoading(true)
+        setError(null)
 
         const timer = setTimeout(async () => {
             try {
                 const data = await Get<ProductResponse[]>(
                     `/products?q=${encodeURIComponent(trimmed)}`
-                );
-                setProducts(data);
+                )
+                setProducts(data)
             } catch {
                 if (!controller.signal.aborted) {
-                    setError("Не удалось загрузить товары");
+                    setError("Не удалось загрузить товары")
                 }
             } finally {
                 if (!controller.signal.aborted) {
-                    setLoading(false);
+                    setLoading(false)
                 }
             }
-        }, 300);
+        }, 300)
 
         return () => {
-            clearTimeout(timer);
-            controller.abort();
-        };
-    }, [query]);
+            clearTimeout(timer)
+            controller.abort()
+        }
+    }, [query])
 
     return (
         <div className="w-full max-w-2xl p-4">
@@ -172,5 +172,5 @@ export default function SearchPage() {
                 )}
             </div>
         </div>
-    );
+    )
 }

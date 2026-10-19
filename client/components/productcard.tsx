@@ -2,7 +2,7 @@
 export interface ProductCardProps {
     name: string
     price: string
-    description: string
+    description: string | null
     inStock: number
 }
 
@@ -16,7 +16,7 @@ export default function ProductCard({ name, price, description, inStock }: Produ
                     <h3 className="text-lg font-semibold leading-tight text-white">
                         {name}
                     </h3>
-                    <span className={`shrink-0 rounded-full ${inStock < 0 ? "text-emerald-300" : "text-red-600" } px-3 py-1 text-sm font-medium ${inStock ? "text-emerald-300" : "text-red-600" } ring-1 ring-inset ring-red-500`}>
+                    <span className={`shrink-0 rounded-full ${Number(inStock) <= 0 ? "text-red-600 ring-red-600" : "text-emerald-300 ring-emerald-300" } px-3 py-1 text-sm font-medium ring-1 ring-inset`}>
                         {price.toLocaleString()} ₽
                     </span>
                 </div>

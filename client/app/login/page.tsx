@@ -1,37 +1,37 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
 
 export default function LoginPage() {
-  const [loginVal, setLoginVal] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false); // <-- Состояние чекбокса
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loginVal, setLoginVal] = useState("")
+  const [password, setPassword] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const { login } = useAuth();
-  const router = useRouter();
+  const { login } = useAuth()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
 
     try {
       await login({
         login: loginVal,
         password,
         remember_me: rememberMe, 
-      });
-      router.push("/products");
+      })
+      router.push("/products")
     } catch (err: any) {
-      setError(err.message || "Ошибка авторизации");
+      setError(err.message || "Ошибка авторизации")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -87,5 +87,5 @@ export default function LoginPage() {
         </button>
       </form>
     </div>
-  );
+  )
 }

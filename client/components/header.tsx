@@ -1,42 +1,41 @@
-  "use client";
+  "use client"
 
-  import { usePathname, useRouter } from "next/navigation";
-  import Navbar from "./navbar";
-  import { useAuth } from "@/context/AuthContext";
+  import { usePathname, useRouter } from "next/navigation"
+  import Navbar from "./navbar"
+  import { useAuth } from "@/context/AuthContext"
 
   interface NavItem {
-    value: string;
-    label: string;
-    roles?: string[];
+    value: string
+    label: string
+    roles?: string[]
   }
 
   const ALL_NAV_ITEMS: NavItem[] = [
     { value: "/", label: "Главная" },
     { value: "/products", label: "Телевизоры" },
-    { value: "/products/employee", label: "Управление продуктами", roles: ["employee"] },
+    { value: "/products/employee", label: "Управление телевизорами", roles: ["employee"] },
     { value: "/search", label: "Поиск" },
     { value: "/events", label: "Мероприятия" },
     { value: "/contacts", label: "Контакты" },
     { value: "/faq", label: "FAQ" },
     { value: "/admin", label: "Панель управления", roles: ["admin"] },
-    { value: "/orders", label: "Заказы", roles: ["employee"] },
-  ];
+  ]
 
   export default function Header() {
-    const router = useRouter();
-    const pathname = usePathname();
-    const { user, logout, loading } = useAuth();
+    const router = useRouter()
+    const pathname = usePathname()
+    const { user, logout, loading } = useAuth()
 
     const filteredItems = ALL_NAV_ITEMS.filter((item) => {
-      if (!item.roles) return true; 
-      if (!user) return false;    
-      return item.roles.includes(user.role);
-    });
+      if (!item.roles) return true 
+      if (!user) return false    
+      return item.roles.includes(user.role)
+    })
 
     const navItems = [
       ...filteredItems,
       ...(!user && !loading ? [{ value: "/login", label: "Авторизация" }] : []),
-    ];
+    ]
 
     const active =
       navItems
@@ -44,7 +43,7 @@
         .sort((a, b) => b.value.length - a.value.length)
         .find((item) =>
           item.value === "/" ? pathname === "/" : pathname.startsWith(item.value)
-        )?.value ?? navItems[0].value;
+        )?.value ?? navItems[0].value
 
     return (
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-xl">
@@ -92,5 +91,5 @@
           </div>
         </div>
       </header>
-    );
+    )
   }

@@ -24,10 +24,10 @@ const faqData = [
       </>
     ),
   },
-];
+]
 
 export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
     <section className="w-full h-full flex flex-col items-center justify-center">
