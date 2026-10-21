@@ -4,12 +4,10 @@ services:
     container_name: shop_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: shop_tv
-      MYSQL_USER: shop_user
-      MYSQL_PASSWORD: waxzsq1d
-      MYSQL_ROOT_PASSWORD: root_secret_password
-    ports:
-      - "3306:3306" 
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
